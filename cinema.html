@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MON CINÉ</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            -webkit-font-smoothing: antialiased;
+        }
+        .cinema-header {
+            width: 100%; height: 90px;
+            background-color: rgba(0, 0, 0, 0.95);
+            border-bottom: 2px solid #e60012;
+            position: fixed; top: 0; left: 0; z-index: 1000;
+            display: flex; align-items: center;
+        }
+        .nav-wrapper {
+            width: 100%; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 0 40px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+        .logo a {
+            text-decoration: none; 
+            color: #fff; 
+            font-size: 26px;
+            font-weight: 900; 
+            letter-spacing: 3px; 
+            text-transform: uppercase;
+        }
+        .logo span { 
+            color: #e60012; 
+            margin-left: 2px; 
+        }
+        .nav-links { 
+            display: flex; 
+            list-style: none; 
+            gap: 40px; 
+        }
+        .nav-links a {
+            text-decoration: none; 
+            color: #ccc; 
+            font-size: 13px;
+            font-weight: 700; 
+            letter-spacing: 1px; 
+            position: relative;
+            padding: 10px 0; 
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover { 
+            color: #fff; 
+        }
+        .nav-links a::after {
+            content: ''; 
+            position: absolute; 
+            bottom: 0; 
+            left: 0;
+            width: 100%; 
+            height: 2px; 
+            background-color: #e60012;
+            transform: scaleX(0); 
+            transform-origin: center;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .nav-links a:hover::after { 
+            transform: scaleX(1); 
+        }
+        .nav-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 30px; 
+        }
+        .btn-tickets {
+            text-decoration: none; 
+            background-color: #e60012; 
+            color: #fff;
+            padding: 12px 30px; 
+            font-size: 12px; 
+            font-weight: 900;
+            letter-spacing: 2px; 
+            border-radius: 4px; 
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(230, 0, 18, 0.3); 
+        }
+        .btn-tickets:hover {
+            background-color: #ff1a2b; 
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(230, 0, 18, 0.6);
+        }
+        #main-content {
+            transition: opacity 0.5s ease; 
+            opacity: 1;
+        }
+        .hero {
+            margin-top: 90px; 
+            height: 80vh;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover; 
+            background-position: center;
+        }
+        .hero-content { 
+            text-align: center; 
+        }
+        .hero-content p { 
+            color: #e60012; 
+            font-weight: bold; 
+            letter-spacing: 4px; 
+            margin-bottom: 10px; 
+            text-transform: uppercase; 
+        }
+        .hero-content h1 { 
+            font-size: 70px; 
+            font-weight: 900; 
+            letter-spacing: 8px; 
+            margin-bottom: 20px; 
+        }
+        .hero-content span { 
+            display: block; 
+            font-size: 18px; 
+            color: #ddd; 
+            font-weight: 300; 
+            letter-spacing: 1px; 
+        }
+        @media (max-width: 992px) { 
+            .nav-links { 
+                display: none; 
+            } 
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: block;
+            position: absolute;
+            top: 100%; 
+            left: 0;
+            background-color: #111; 
+            min-width: 200px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.5);
+            z-index: 1001;
+            border: 1px solid #333;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .dropdown-content li {
+            list-style: none;
+            width: 100%;
+        }
+        .dropdown-content li a {
+            color: #ccc ;
+            padding: 15px 20px ;
+            display: block;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #222;
+        }
+        .dropdown-content li a::after {
+            display: none;
+        }
+        .dropdown-content li a:hover {
+            background-color: #e60012;
+            color: #fff;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <header class="cinema-header">
+        <div class="nav-wrapper">
+            <div class="logo">
+                <a href="index.html">MON<span>CINÉ</span></a>
+            </div>
+
+            <nav>
+                <ul class="nav-links">
+                    <li class="dropdown">
+                        <a href="#" id="btn-phim">PHIM</a>
+                        <ul class="dropdown-content">
+                            <li><a href="#" onclick="changePage('btn-dang-chieu')">Phim Đang Chiếu</a></li>
+                            <li><a href="#" onclick="changePage('btn-sap-chieu')">Phim Sắp Chiếu</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" id="btn-lich-chieu">LỊCH CHIẾU</a></li>
+                    <li><a href="#" id="btn-rap-chieu">RẠP CHIẾU</a></li>
+                    <li><a href="#" id="btn-khuyen-mai">KHUYẾN MÃI</a></li>
+                    <li><a href="#" id="btn-shop">SHOP</a></li>
+                    <li><a href="#" id="btn-danh-gia">ĐÁNH GIÁ PHIM</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-right">
+                <a href="#" class="btn-tickets">ĐẶT VÉ NGAY</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section class="hero">
+            <div class="hero-content">
+                <p>LIGHT. CAMERA. ACTION.</p>
+                <h1>LA VISION</h1>
+                <span>Nơi mỗi thước phim là một mảnh ghép của tâm hồn.</span>
+            </div>
+        </section>
+    </main>
+
+
+
+<script>
+    const mainContent = document.getElementById('main-content');
+    const pages = {
+        'btn-dang-chieu': `
+            <section style="padding: 120px 50px; text-align: center; background: #000;">
+                <h2 style="color: #e60012; margin-bottom: 40px; letter-spacing: 2px;">DANH SÁCH PHIM ĐANG CHIẾU</h2>
+                <div style="display: flex; justify-content: center; gap: 40px; max-width: 1200px; margin: 0 auto;">
+                    <div class="movie-card" style="width: 280px;">
+                        <img src="jjk0.jpg" style="width: 100%; height: 380px; object-fit: cover; border-radius: 10px; border: 1px solid #333;">
+                        <h3 style="font-size: 16px; margin-top: 10px; color: #fff;">JUJUTSU KAISEN 0</h3>
+                        <p style="color: #888; font-size: 13px;">Thể loại: Hành động, Kỳ ảo</p>
+                        <p style="color: #888; font-size: 13px;">Thời lượng: 105 phút</p>
+                    </div>
+                </div>
+            </section>`,
+
+        'btn-sap-chieu': `
+            <section style="padding: 120px 50px; text-align: center; background: #000;">
+                <h2 style="color: #e60012; margin-bottom: 40px; letter-spacing: 2px;">DANH SÁCH PHIM SẮP CHIẾU</h2>
+                <div style="display: flex; justify-content: center; gap: 40px; max-width: 1200px; margin: 0 auto;">
+                    <div class="movie-card" style="width: 280px;">
+                        <img src="yourname.jpg" style="width: 100%; height: 380px; object-fit: cover; border-radius: 10px; border: 1px solid #333;">
+                        <h3 style="font-size: 16px; margin-top: 10px; color: #fff;">YOUR NAME</h3>
+                        <p style="color: #888; font-size: 13px;">Thể loại: Lãng mạn, Học đường</p>
+                        <p style="color: #888; font-size: 13px;">Thời lượng: 110 phút</p>
+                    </div>
+                </div>
+            </section>`,
+        
+        'btn-lich-chieu': `
+            <section style="padding: 120px 50px; text-align: center;">
+                <h2 style="color: #e60012;">LỊCH CHIẾU HÔM NAY</h2>
+                <p style="margin-top: 20px; color: #888;">Hệ thống đang cập nhật lịch chiếu từ các rạp...</p>
+                <table style="width: 100%; max-width: 800px; margin: 40px auto; border-collapse: collapse;">
+                    <tr style="border-bottom: 1px solid #333;">
+                        <td style="padding: 20px;">14:00</td>
+                        <td style="padding: 20px; color: #e60012;">JUJUTSU KAISEN 0</td>
+                        <td style="padding: 20px;">Phòng chiếu 04</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #333;">
+                        <td style="padding: 20px;">16:30</td>
+                        <td style="padding: 20px; color: #e60012;">YOUR NAME</td>
+                        <td style="padding: 20px;">Phòng chiếu 01</td>
+                    </tr>
+                </table>
+            </section>`,
+
+        'btn-rap-chieu': `
+            <section style="padding: 120px 50px; text-align: center;">
+                <h2 style="color: #e60012;">HỆ THỐNG RẠP</h2>
+                <p style="margin-top: 20px;">Tìm kiếm rạp MON CINÉ gần bạn nhất.</p>
+            </section>`,
+
+        'btn-khuyen-mai': `
+            <section style="padding: 120px 50px; text-align: center;">
+                <h2 style="color: #e60012;">ƯU ĐÃI & KHUYẾN MÃI</h2>
+                <div style="margin-top: 30px; padding: 40px; border: 2px dashed #e60012; display: inline-block;">
+                    <h3 style="color: #fff;">GIẢM 50% CHO HỌC SINH/SINH VIÊN</h3>
+                    <p style="color: #888; margin-top: 10px;">Áp dụng cho tất cả các suất chiếu thứ 4 hàng tuần.</p>
+                </div>
+            </section>`,
+
+        'btn-shop': `
+            <section style="padding: 120px 50px; text-align: center;">
+                <h2 style="color: #e60012;">CINÉ SHOP</h2>
+                <p style="margin-top: 20px;">Mua bắp nước và quà lưu niệm anime chính hãng.</p>
+            </section>`,
+
+        'btn-danh-gia': `
+            <section style="padding: 120px 50px; text-align: center;">
+                <h2 style="color: #e60012;">ĐÁNH GIÁ PHIM</h2>
+                <p style="margin-top: 20px;">Chia sẻ cảm nhận của bạn về những bộ phim đã xem.</p>
+            </section>`
+    };
+
+    function changePage(pageId) {
+        if (!pages[pageId]) return;
+        mainContent.style.opacity = 0;
+        setTimeout(() => {
+            mainContent.innerHTML = pages[pageId];
+            mainContent.style.opacity = 1;
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }, 300);
+    }
+    Object.keys(pages).forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                changePage(id);
+            });
+        }
+    });
+    const logo = document.querySelector('.logo a');
+    const originalHero = mainContent.innerHTML;
+    logo.addEventListener('click', (e) => {
+        e.preventDefault();
+        mainContent.style.opacity = 0;
+        setTimeout(() => {
+            mainContent.innerHTML = originalHero;
+            mainContent.style.opacity = 1;
+        }, 300);
+    });
+</script>
+
+</body>
+</html>
